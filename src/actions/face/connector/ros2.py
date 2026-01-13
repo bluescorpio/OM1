@@ -1,7 +1,7 @@
 import logging
 
 from actions.base import ActionConfig, ActionConnector
-from actions.face.interface import FaceInput
+from actions.face.interface import FaceInput, FaceAction
 
 
 class FaceRos2Connector(ActionConnector[ActionConfig, FaceInput]):
@@ -31,17 +31,17 @@ class FaceRos2Connector(ActionConnector[ActionConfig, FaceInput]):
         """
         new_msg = {"face": ""}
 
-        if output_interface.action == "happy":
+        if output_interface.action == FaceAction.HAPPY:
             new_msg["face"] = "happy"
-        elif output_interface.action == "confused":
+        elif output_interface.action == FaceAction.CONFUSED:
             new_msg["face"] = "confused"
-        elif output_interface.action == "curious":
+        elif output_interface.action == FaceAction.CURIOUS:
             new_msg["face"] = "curious"
-        elif output_interface.action == "excited":
+        elif output_interface.action == FaceAction.EXCITED:
             new_msg["face"] = "excited"
-        elif output_interface.action == "sad":
+        elif output_interface.action == FaceAction.SAD:
             new_msg["face"] = "sad"
-        elif output_interface.action == "think":
+        elif output_interface.action == FaceAction.THINK:
             new_msg["face"] = "think"
         else:
             logging.info(f"Unknown face type: {output_interface.action}")

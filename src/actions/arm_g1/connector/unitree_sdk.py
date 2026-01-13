@@ -1,6 +1,6 @@
 import logging
 
-from actions.arm_g1.interface import ArmInput
+from actions.arm_g1.interface import ArmInput, ArmAction
 from actions.base import ActionConfig, ActionConnector
 from unitree.unitree_sdk2py.g1.arm.g1_arm_action_client import G1ArmActionClient
 
@@ -40,25 +40,25 @@ class ARMUnitreeSDKConnector(ActionConnector[ActionConfig, ArmInput]):
         """
         logging.info(f"AI command.action: {output_interface.action}")
 
-        if output_interface.action == "idle":
+        if output_interface.action == ArmAction.IDLE:
             logging.info("No action to perform, returning.")
             return
 
         action_id = None
 
-        if output_interface.action == "left kiss":
+        if output_interface.action == ArmAction.LEFT_KISS:
             action_id = 12
-        elif output_interface.action == "right kiss":
+        elif output_interface.action == ArmAction.RIGHT_KISS:
             action_id = 13
-        elif output_interface.action == "clap":
+        elif output_interface.action == ArmAction.CLAP:
             action_id = 17
-        elif output_interface.action == "high five":
+        elif output_interface.action == ArmAction.HIGH_FIVE:
             action_id = 18
-        elif output_interface.action == "shake hand":
+        elif output_interface.action == ArmAction.SHAKE_HAND:
             action_id = 27
-        elif output_interface.action == "heart":
+        elif output_interface.action == ArmAction.HEART:
             action_id = 20
-        elif output_interface.action == "high wave":
+        elif output_interface.action == ArmAction.HIGH_WAVE:
             action_id = 26
         else:
             logging.warning(f"Unknown action: {output_interface.action}")

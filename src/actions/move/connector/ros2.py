@@ -1,7 +1,7 @@
 import logging
 
 from actions.base import ActionConfig, ActionConnector
-from actions.move.interface import MoveInput
+from actions.move.interface import MoveInput, MovementAction
 
 
 class MoveUnitreeSDKConnector(ActionConnector[ActionConfig, MoveInput]):
@@ -24,23 +24,23 @@ class MoveUnitreeSDKConnector(ActionConnector[ActionConfig, MoveInput]):
         new_msg = {"move": ""}
 
         # stub to show how to do this
-        if output_interface.action == "stand still":
+        if output_interface.action == MovementAction.STAND_STILL:
             new_msg["move"] = "stand still"
-        elif output_interface.action == "sit":
+        elif output_interface.action == MovementAction.SIT:
             new_msg["move"] = "sit"
-        elif output_interface.action == "dance":
+        elif output_interface.action == MovementAction.DANCE:
             new_msg["move"] = "dance"
-        elif output_interface.action == "shake paw":
+        elif output_interface.action == MovementAction.SHAKE_PAW:
             new_msg["move"] = "shake paw"
-        elif output_interface.action == "walk":
+        elif output_interface.action == MovementAction.WALK:
             new_msg["move"] = "walk"
-        elif output_interface.action == "walk back":
+        elif output_interface.action == MovementAction.WALK_BACK:
             new_msg["move"] = "walk back"
-        elif output_interface.action == "run":
+        elif output_interface.action == MovementAction.RUN:
             new_msg["move"] = "run"
-        elif output_interface.action == "jump":
+        elif output_interface.action == MovementAction.JUMP:
             new_msg["move"] = "jump"
-        elif output_interface.action == "wag tail":
+        elif output_interface.action == MovementAction.WAG_TAIL:
             new_msg["move"] = "wag tail"
         else:
             logging.info(f"Other move type: {output_interface.action}")

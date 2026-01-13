@@ -1,7 +1,7 @@
 import logging
 
 from actions.base import ActionConfig, ActionConnector
-from actions.face.interface import FaceInput
+from actions.face.interface import FaceInput, FaceAction
 from providers.avatar_provider import AvatarProvider
 
 
@@ -32,17 +32,17 @@ class FaceAvatarConnector(ActionConnector[ActionConfig, FaceInput]):
         ----------
         output_interface : FaceInput
         """
-        if output_interface.action == "happy":
+        if output_interface.action == FaceAction.HAPPY:
             self.avatar_provider.send_avatar_command("Happy")
-        elif output_interface.action == "sad":
+        elif output_interface.action == FaceAction.SAD:
             self.avatar_provider.send_avatar_command("Sad")
-        elif output_interface.action == "curious":
+        elif output_interface.action == FaceAction.CURIOUS:
             self.avatar_provider.send_avatar_command("Curious")
-        elif output_interface.action == "confused":
+        elif output_interface.action == FaceAction.CONFUSED:
             self.avatar_provider.send_avatar_command("Confused")
-        elif output_interface.action == "think":
+        elif output_interface.action == FaceAction.THINK:
             self.avatar_provider.send_avatar_command("Think")
-        elif output_interface.action == "excited":
+        elif output_interface.action == FaceAction.EXCITED:
             self.avatar_provider.send_avatar_command("Excited")
         else:
             logging.warning("Failed to send avatar face command")
