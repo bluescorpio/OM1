@@ -4,7 +4,7 @@ import time
 from pydantic import Field
 
 from actions.base import ActionConfig, ActionConnector
-from actions.emotion.interface import EmotionInput
+from actions.emotion.interface import EmotionInput, EmotionAction
 from unitree.unitree_sdk2py.g1.audio.g1_audio_client import AudioClient
 
 
@@ -72,16 +72,16 @@ class EmotionUnitreeConnector(ActionConnector[EmotionUnitreeConfig, EmotionInput
             logging.error("No Unitree Emotion Client")
             return
 
-        if output_interface.action == "happy":
+        if output_interface.action == EmotionAction.HAPPY:
             logging.info("Unitree: happy")  # green
             self.ao_client.LedControlNoReply(0, 255, 0)
-        elif output_interface.action == "sad":
+        elif output_interface.action == EmotionAction.SAD:
             logging.info("Unitree: sad")  # yellow
             self.ao_client.LedControlNoReply(255, 255, 0)
-        elif output_interface.action == "mad":
+        elif output_interface.action == EmotionAction.MAD:
             logging.info("Unitree: mad")  # red
             self.ao_client.LedControlNoReply(255, 0, 0)
-        elif output_interface.action == "curious":
+        elif output_interface.action == EmotionAction.CURIOUS:
             logging.info("Unitree: curious")  # blue
             self.ao_client.LedControlNoReply(0, 0, 255)
         else:
