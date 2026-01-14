@@ -10,6 +10,7 @@ from llm.function_schemas import convert_function_calls_to_actions
 from llm.output_model import CortexOutputModel
 from providers.avatar_llm_state_provider import AvatarLLMState
 from providers.llm_history_manager import LLMHistoryManager
+from config.secure_config import SecureConfig
 
 R = T.TypeVar("R", bound=BaseModel)
 
@@ -47,14 +48,20 @@ class NearAILLM(LLM[R]):
         """
         super().__init__(config, available_actions)
 
-        if not config.api_key:
+        # 安全获取API密钥
+        api_key = SecureConfig.get_api_key("nearai")
+        if not api_key:
             raise ValueError("config file missing api_key")
+        
+        # 验证API密钥
+        if not SecureConfig.validate_api_key(api_key, "nearai"):
+            raise ValueError("Invalid or test API key in production environment")
         if not config.model:
             self._config.model = "qwen3-30b-a3b-instruct-2507"
 
         self._client = openai.AsyncClient(
             base_url=config.base_url or "https://api.openmind.org/api/core/nearai",
-            api_key=config.api_key,
+            api_key=api_key,
         )
 
         # Initialize history manager
