@@ -472,8 +472,23 @@ class WebSim(Simulator):
             self.active_connections.append(websocket)
             try:
                 await websocket.send_json(self.state.to_dict())
+                
+                # 优化：使用事件驱动模式，避免无阻塞循环
                 while True:
-                    await websocket.receive_text()
+                    try:
+                        # 设置超时，避免无限阻塞
+                        message = await asyncio.wait_for(websocket.receive_text(), timeout=0.5)
+                        if message:
+                            await self.process_message(message)
+                        else:
+                            # 超时后短暂休眠，减少CPU占用
+                            await asyncio.sleep(0.1)
+                    except asyncio.TimeoutError:
+                        # 超时是正常的，继续循环
+                        continue
+                    except Exception as e:
+                        logging.error(f"Message processing error: {e}")
+                        break
             except Exception as e:
                 logging.error(f"WebSocket error: {e}")
             finally:
