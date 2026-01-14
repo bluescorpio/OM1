@@ -9,7 +9,7 @@ import zenoh
 from pydantic import Field
 
 from actions.base import ActionConfig, ActionConnector, MoveCommand
-from actions.move_turtle.interface import MoveInput
+from actions.move_turtle.interface import MoveInput, MovementAction
 from providers.odom_provider import OdomProvider
 from providers.rplidar_provider import RPLidarProvider
 from zenoh_msgs import geometry_msgs, open_zenoh_session, sensor_msgs
@@ -178,19 +178,19 @@ class MoveZenohConnector(ActionConnector[MoveZenohConfig, MoveInput]):
             if 9 in possible_paths:
                 retreat_danger = False
 
-        if output_interface.action == "turn left":
-            # turn 90 Deg to the left (CCW)
+if output_interface.action == MovementAction.TURN_LEFT:
+            # turn 90 Deg to left (CCW)
             target_yaw = self.odom.odom_yaw_m180_p180 - 30.0
             if target_yaw <= -180:
                 target_yaw += 360.0
             self.pending_movements.put(MoveCommand(dx=0.0, yaw=target_yaw))
-        elif output_interface.action == "turn right":
-            # turn 90 Deg to the right (CW)
+        elif output_interface.action == MovementAction.TURN_RIGHT:
+            # turn 90 Deg to right (CW)
             target_yaw = self.odom.odom_yaw_m180_p180 + 30.0
             if target_yaw >= 180.0:
                 target_yaw -= 360.0
             self.pending_movements.put(MoveCommand(dx=0.0, yaw=target_yaw))
-        elif output_interface.action == "move forwards":
+        elif output_interface.action == MovementAction.MOVE_FORWARDS:
             if advance_danger:
                 return
             self.pending_movements.put(
@@ -212,7 +212,7 @@ class MoveZenohConnector(ActionConnector[MoveZenohConfig, MoveInput]):
                     start_y=self.odom.y,
                 )
             )
-        elif output_interface.action == "stand still":
+        elif output_interface.action == MovementAction.STAND_STILL:
             logging.info(f"AI movement command: {output_interface.action}")
             # do nothing
         else:
