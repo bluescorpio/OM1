@@ -8,6 +8,7 @@
 
 # from llm import LLM, LLMConfig
 # from providers.unitree_go2_location_provider import UnitreeGo2LocationProvider
+# from config.secure_config import SecureConfig
 
 # R = T.TypeVar("R", bound=BaseModel)
 
@@ -38,14 +39,20 @@
 #         """
 #         super().__init__(output_model, config)
 
-#         if not config.api_key:
+#         # 安全获取API密钥
+#         api_key = SecureConfig.get_api_key("openmind")
+#         if not api_key:
 #             raise ValueError("config file missing api_key")
+#         
+#         # 验证API密钥
+#         if not SecureConfig.validate_api_key(api_key, "openmind"):
+#             raise ValueError("Invalid or test API key in production environment")
 #         if not config.model:
 #             self._config.model = "gpt-4o-mini"
 
 #         self._client = openai.AsyncClient(
 #             base_url=config.base_url or "https://api.openmind.org/api/core/openai",
-#             api_key=config.api_key,
+#             api_key=api_key,
 #         )
 
 #         self.unitree_go2_location_provider = UnitreeGo2LocationProvider()
